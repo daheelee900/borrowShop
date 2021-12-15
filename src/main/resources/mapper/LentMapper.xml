@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.LentMapper">
+ 	<insert id="cart_insert">
+ 	insert into tbl_cart(cuid,c_image,c_title) values(#{cuid},#{c_image},#{c_title})
+ 	
+ 	</insert>
+ 	<insert id="order_insert">
+ 	insert into tbl_order(ouid,order_date,item_name,quantity,pay_status,pay_price) values(#{ouid},#{order_date},#{item_name},#{quantity},#{pay_status},#{pay_price})
+ 	
+ 	</insert>
+ 		<select id="max_pay_no" resultType="int">
+ 		select max(order_no) from tbl_order
+ 		where ouid=#{ouid}
+ 		order by order_no desc
+ 	</select>
+ 		<select id="list" resultType="com.example.domain.LentVO">
+ 		select * from tbl_cart
+ 		where cuid=#{cuid} and (cart_status=1 || cart_status=0)
+ 		order by c_no desc
+ 	</select>
+ 		<select id="orderlist" resultType="com.example.domain.OderVO">
+ 		select * from tbl_order
+ 		where ouid=#{ouid} and pay_status=2
+ 		order by order_no desc
+ 	</select>
+ 		<update id="cart_update">
+		update tbl_cart set
+		cart_status =1
+		where c_no = #{c_no} and cuid=#{cuid}
+	</update>
+ 		<update id="order_update">
+		update tbl_order set
+		order_date=#{order_date}, pay_status=#{pay_status}
+		where order_no = #{order_no}
+	</update>
+		<update id="paycheck_status">
+		update tbl_cart set
+		cart_status =2
+		where c_no = #{c_no} 
+	</update>
+		<update id="pay_cancel">
+		update tbl_cart set
+		cart_status =0
+		where c_no = #{c_no} 
+	</update>
+ 		<select id="cart_list" resultType="com.example.domain.LentVO">
+ 		select * from tbl_cart
+ 		where cuid=#{cuid} and cart_status=1
+ 		order by c_no desc
+ 	</select>
+ 		<select id="order_list" resultType="com.example.domain.OderVO">
+ 		select * from tbl_order
+ 		where ouid=#{ouid} and pay_status=2
+ 		order by order_no desc
+ 	</select>
+ 		<delete id="delete">
+ 		delete from tbl_cart
+ 		where c_no=#{c_no};
+ 	</delete>
+</mapper>
